@@ -11,7 +11,7 @@ Qerun follows a **safety-first tokenomics design**: prioritizing trust, capital 
 ---
 
 ## 2. Token Supply
-- **Total Supply**: Fixed at launch (exact number TBD).
+- **Total Supply**: Fixed at launch and will be changed only by DAO (exact number TBD).
 - **Minting/Burning**: No arbitrary minting. Any supply changes must be community-governed.
 - **Distribution (initial outline)**:
   - Community & Ecosystem: majority allocation.
