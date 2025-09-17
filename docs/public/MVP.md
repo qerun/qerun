@@ -25,6 +25,8 @@ It is not a prototype or demo. Instead, it is a **usable foundation** that provi
   - Users can contribute assets (crypto or Qerun NFTs) into the vault. Holders of Qerun NFTs gain the right to participate in governance.  
 - **User Dashboard**  
   - A simple web interface where users can manage vaults, review withdrawal requests, and track project state.  
+- **Mobile App (Initial Release)**
+  - A lightweight mobile version of the dashboard, allowing users to receive withdrawal alerts, check vault activity, and monitor project state on the go.
 
 ---
 
