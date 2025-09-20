@@ -1,7 +1,14 @@
 # Qerun Architecture Overview
 
 ## 1. Executive Summary
-[See detailed Executive Summary](docs/public/executive_summary.md) (Provides a high-level overview of the Qerun project, its goals, and key architectural highlights.)
+Qerun is a cutting-edge platform designed to streamline and optimize the process of managing decentralized workflows. It aims to provide a scalable, secure, and user-friendly environment that empowers organizations to automate complex sequences of tasks across distributed teams and systems.
+
+### Key Metrics & Scope
+- **User Base:** Targeting enterprise clients with an expected initial user base of 10,000 active users within the first year.
+- **Transactions:** Capable of handling up to 1 million workflow executions per month with sub-second response times.
+- **Scalability:** Designed to scale horizontally to support growth up to 100,000 concurrent users.
+- **Security:** Implements end-to-end encryption and multi-factor authentication to ensure data integrity and privacy.
+- **Scope:** Covers workflow orchestration, real-time monitoring, analytics, and integration with third-party services through a robust API.
 
 ## 2. Context & Requirements
 [See detailed Context & Requirements](docs/public/context_requirements.md) (Describes the background, business context, and functional/non-functional requirements.)
