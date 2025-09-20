@@ -11,8 +11,8 @@ Qerun follows a **safety-first tokenomics design**: prioritizing trust, capital 
 ---
 
 ## 2. Token Supply
-- **Total Supply**: Fixed at launch and will be changed only by DAO (exact number TBD).
-- **Minting/Burning**: No arbitrary minting. Any supply changes must be community-governed.
+- **Total Supply**: Fixed at 111,111,111 QER at launch; no changes allowed.
+- **Minting/Burning**: No minting or burning allowed; null-address transfers are protected against.
 - **Distribution (initial outline)**:
   - Community & Ecosystem: majority allocation.
   - Team & Contributors: vesting-based, long-term locked.
@@ -23,22 +23,24 @@ Qerun follows a **safety-first tokenomics design**: prioritizing trust, capital 
 
 ## 3. Utility & Use Cases
 - **Governance**: vote on proposals and parameters.
-- **Staking**: locking QER enhances governance power and may unlock ecosystem benefits.
-- **Reputation**: QER staking can serve as a credibility signal within the community.
+- **Staking**: locking QER enhances governance power and unlocks ecosystem benefits.
+- **Reputation**: QER staking serves as a credibility signal within the community.
 - **Borrowing**: QER holders can borrow stablecoins against their holdings (see Section 4).
 - **Access**: certain advanced features and perks require QER.
+- **Base Token Utility**: QER is not only for voting but also serves as the foundational asset for multiple ecosystem functions.
 
 ---
 
 ## 4. Borrowing & ETH Reserve Mechanism
-- QER holders can borrow up to **50% of their QER’s USD value**.
+- QER holders can borrow up to **50% of their QER’s USD value** or as decided by DAO.
 - When borrowing:
   - **50% of borrowed value** → available to user as stablecoins.
-  - **50% of borrowed value** → automatically used by protocol to buy ETH and add to reserves.
+  - **50% of borrowed value** → automatically used by protocol to buy ETH and add to reserves or as decided by DAO.
 - This design:
   - Reduces active QER supply (as collateral is locked).
   - Accumulates ETH reserves to strengthen the protocol.
   - Provides users with liquidity while reinforcing ecosystem growth.
+  - Null-address protection ensures tokens cannot be lost or burned unintentionally during these operations.
 
 ---
 
@@ -46,6 +48,7 @@ Qerun follows a **safety-first tokenomics design**: prioritizing trust, capital 
 - **Liquidity Incentives**: rewards for providing liquidity to pools.
 - **Long-term Holding**: staking/locking rewards for users who commit to QER.
 - **ETH Growth Loop**: ETH purchased from borrowing creates double exposure to ecosystem growth.
+- **Fixed Supply Incentives**: with a fixed supply and no minting/burning, incentives focus on value accrual and ecosystem participation rather than inflationary rewards.
 
 ---
 
@@ -57,7 +60,7 @@ Qerun follows a **safety-first tokenomics design**: prioritizing trust, capital 
 ---
 
 ## 7. Security & Risk Mitigation
-- Conservative borrowing (50% LTV).
+- Conservative borrowing (LTV DAO).
 - Clear liquidation rules to prevent systemic risk.
 - Insurance/Treasury allocation to cover bad debt.
 - Reliance on reliable oracles for pricing QER and ETH.
