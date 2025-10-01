@@ -38,7 +38,7 @@ The ecosystem is composed of three layers.
    - `StateManager.sol` (global configuration registry).
    - `Swap/DEX` contract (AMM or bonding-curve module for QER ↔ base asset).
    - `PortfolioManager.sol` (backing assets ledger, reserve accounting).
-   - `GovernanceTimelock` + optional `MultiSig` (execution gating, emergency powers).
+   - `GovernanceTimelock` + optional `MultiSig` for vaults and main wallets (execution gating, emergency powers).
 
 2. **Interface & integration layer (off-chain)**
    - Qerun Portal (Next.js static site served via IPFS/ENS) for token info, swap UI, governance updates.
