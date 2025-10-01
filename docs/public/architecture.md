@@ -1,65 +1,170 @@
 # Qerun Architecture Overview
 
 ## 1. Executive Summary
-Qerun is a cutting-edge platform designed to streamline and optimize the process of managing decentralized workflows. It aims to provide a scalable, secure, and user-friendly environment that empowers organizations to automate complex sequences of tasks across distributed teams and systems.
+Qerun is a portfolio-backed, DAO-governed crypto ecosystem designed to give members a transparent, low-friction way to hold and grow value. The MVP focuses on four core capabilities: minting and tracking the fixed-supply QER token, managing backing assets, enabling controlled swaps, and coordinating governance actions through a community-owned portal.
 
-### Key Metrics & Scope
-- **User Base:** Targeting enterprise clients with an expected initial user base of 10,000 active users within the first year.
-- **Transactions:** Capable of handling up to 1 million workflow executions per month with sub-second response times.
-- **Scalability:** Designed to scale horizontally to support growth up to 100,000 concurrent users.
-- **Security:** Implements end-to-end encryption and multi-factor authentication to ensure data integrity and privacy.
-- **Scope:** Covers workflow orchestration, real-time monitoring, analytics, and integration with third-party services through a robust API.
+Key objectives for the MVP architecture:
+- Preserve capital safety through conservative smart-contract design and multi-party controls.
+- Keep components modular so future governance, social, and financial utilities can plug in without rewrites.
+- Ensure every user-facing action is explainable and traceable (alerts, timelocks, immutable logs).
+- Support a progressive decentralisation path: start with steward-controlled operations, then hand off powers to the DAO as tooling matures.
 
 ## 2. Context & Requirements
-[See detailed Context & Requirements](docs/public/context_requirements.md) (Describes the background, business context, and functional/non-functional requirements.)
+### Business context
+- Community-first protocol where membership is represented by QER and governance NFTs.
+- Initial audience: early adopters providing liquidity and helping define treasury strategy.
+- Distribution and engagement rely on credibility; architecture must surface provable state at all times.
 
-## 3. High-Level Architecture
-[See detailed High-Level Architecture](docs/public/high_level_architecture.md) (Outlines the main components and their interactions at a system-wide level.)
+### Functional requirements
+- Fixed-supply ERC-20 token (`QER`) with DAO-controlled mint permissions and null-address protections.
+- Registry of protocol configuration (addresses, limits, feature flags) that other contracts can read without redeploys.
+- Swap mechanism allowing participants to acquire/redeem QER with the chosen base asset (WETH or a stablecoin).
+- Portfolio ledger that records the assets backing QER and exposes summary metrics to the dashboard.
+- Governance hooks (timelock, multi-sig, voting adapters) to gate sensitive changes.
+- Public-facing portal that retrieves on-chain data, shows alerts, and guides users through flows.
 
-## 4. Deployment Topology
-[See detailed Deployment Topology](docs/public/deployment_topology.md) (Explains how the system is deployed across environments and infrastructure.)
+### Non-functional requirements
+- Deterministic deployments with reproducible builds (Foundry/Hardhat, scripted migrations).
+- Minimal external trust assumptions; every oracle or off-chain dependency must be documented.
+- Gas efficiency in steady-state operations, but favour clarity and auditability over micro-optimisation.
+- Uptime target for public portal ≥ 99% using static hosting + redundancy (IPFS pinning + fallback site).
+- Security-first lifecycle: reviews, test coverage, and staged rollouts before DAO activation.
 
-## 5. Domain Model & Data Schema
-[See detailed Domain Model & Data Schema](docs/public/domain_model_data_schema.md) (Defines the core entities, relationships, and the structure of stored data.)
+## 3. System Overview
+The ecosystem is composed of three layers.
 
-## 6. API Design
-[See detailed API Design](docs/public/api_design.md) (Details the interface design, endpoints, and protocols for system integration.)
+1. **Smart-contract layer (on-chain)**
+   - `Qerun.sol` (ERC-20 token, supply control, security guards).
+   - `StateManager.sol` (global configuration registry).
+   - `Swap/DEX` contract (AMM or bonding-curve module for QER ↔ base asset).
+   - `PortfolioManager.sol` (backing assets ledger, reserve accounting).
+   - `GovernanceTimelock` + optional `MultiSig` (execution gating, emergency powers).
 
-## 7. Key Flows (Sequences)
-[See detailed Key Flows](docs/public/key_flows.md) (Describes important workflows and sequence diagrams for major use cases.)
+2. **Interface & integration layer (off-chain)**
+   - Qerun Portal (Next.js static site served via IPFS/ENS) for token info, swap UI, governance updates.
+   - Wallet tracker / alerting microservice (optional in MVP) that listens to contract events and pushes notifications.
+   - Admin tooling (CLI scripts, ops dashboards) used by stewards and, eventually, elected DAO roles.
 
-## 8. Scalability & Performance
-[See detailed Scalability & Performance](docs/public/scalability_performance.md) (Covers design considerations for scaling and optimizing system performance.)
+3. **Support services**
+   - Data indexing (The Graph/Substreams or lightweight event listeners) to populate dashboards.
+   - Storage and delivery (IPFS, optional Arweave mirror, CDN pinning.
+   - Observability stack (logs from indexing services, alerting for contract anomalies).
 
-## 9. Reliability, HA & DR
-[See detailed Reliability, HA & DR](docs/public/reliability_ha_dr.md) (Discusses strategies for reliability, high availability, and disaster recovery.)
+## 4. Smart Contract Architecture
+### 4.1 StateManager.sol
+- Namespaced key/value store (`module.key`) for addresses, protocol parameters, feature flags.
+- Only governance or designated stewards can mutate entries; reads are permissionless.
+- Emits detailed events on every write (`ConfigUpdated(module, key, oldValue, newValue, actor)`).
+- Provides helper views for frequently accessed settings (e.g., `getSwapPool()`, `getTreasury()`).
 
-## 10. Security & Privacy
-[See detailed Security & Privacy](docs/public/security_privacy.md) (Explains the security model, privacy controls, and threat mitigations.)
+### 4.2 Qerun.sol (QER token)
+- ERC-20 implementation with fixed 111,111,111 supply ceiling; mint/burn functions require governance authorization.
+- Null-address transfers blocked at the contract level; emits explicit errors for misuse.
+- Hooks to lock collateral when users enter borrowing products (future phases), ensuring compatibility with the reserve mechanism.
+- Maintains metadata for UI (symbol, decimals, version) and exposes governance modifier to restrict sensitive functions.
 
-## 11. Observability & Ops
-[See detailed Observability & Ops](docs/public/observability_ops.md) (Describes monitoring, logging, alerting, and operational processes.)
+### 4.3 Swap / DEX Module
+- MVP supports one base asset (configured in `StateManager`).
+- Pricing logic can start with a simple constant-product pool seeded by treasury liquidity.
+- Integrates with protocol fee policy; fees routed to treasury or staking module once live.
+- Includes pause switch for emergency halts and slippage-checked swap functions to protect users.
 
-## 12. CI/CD & Environments
-[See detailed CI/CD & Environments](docs/public/cicd_environments.md) (Outlines continuous integration, delivery pipelines, and environment management.)
+### 4.4 Portfolio Manager
+- Tracks deposits/withdrawals of backing assets; each asset entry stores type, amount, valuation metadata, and custodian.
+- Publishes aggregate metrics (total reserve value, asset mix) for dashboards via events.
+- Enforces role-based access: only authorised stewards/DAO can register or move assets.
+- Designed for extension: future modules can plug in valuation oracles or automated rebalancing.
 
-## 13. Testing Strategy
-[See detailed Testing Strategy](docs/public/testing_strategy.md) (Details the testing approach, types of tests, and quality assurance processes.)
+### 4.5 Governance & Control Layer
+- Timelock contract queues sensitive transactions (minting, config updates) and enforces delay before execution.
+- Multi-signature safe holds ultimate admin role during bootstrap; DAO voting contract replaces it as trust matures.
+- Emergency pause/guardian keys exist for MVP but are transparently published in `StateManager` for accountability.
 
-## 14. Compliance & Auditing
-[See detailed Compliance & Auditing](docs/public/compliance_auditing.md) (Addresses regulatory compliance, audit trails, and governance requirements.)
+## 5. Off-Chain Interfaces & Services
+### 5.1 Qerun Portal (Web)
+- Next.js app compiled to static assets and pinned to IPFS; ENS (e.g., `qerun.eth`) points to the content hash.
+- Features: dashboard for supply/reserve metrics, swap UI, governance timeline, documentation hub.
+- Fetches on-chain data via JSON-RPC or community-maintained indexers; uses `StateManager` to discover contract addresses.
 
-## 15. Risks, Assumptions, Decisions
-[See detailed Risks, Assumptions, Decisions](docs/public/risks_assumptions_decisions.md) (Lists key risks, underlying assumptions, and major architectural decisions.)
+### 5.2 Wallet Tracker & Alerts
+- Optional service subscribing to contract events (withdrawal requests, timelock queue, reserve movements).
+- Sends push/email/webhook notifications to opt-in users before withdrawals execute, aligning with MVP promises.
+- Can run as lightweight serverless functions; publishes public RSS/JSON feeds for transparency.
 
-## 16. Cost Model (Sketch)
-[See detailed Cost Model](docs/public/cost_model.md) (Provides an initial estimate of costs and resource requirements.)
+### 5.3 Ops Tooling
+- CLI scripts for deployments (Foundry/Hardhat) and recovery runbooks.
+- Admin dashboards aggregating metrics from Portfolio Manager and Swap contract event logs.
+- GitHub Actions pipelines for lint/test/deploy-to-IPFS tasks.
 
-## 17. QER Token Architecture
-[See detailed QER Token Architecture](docs/public/qer_token_architecture.md) (Describes the architecture and mechanics of the QER token system.)
+## 6. Key Flows
+1. **Acquire QER**
+   - User visits portal, connects wallet, reads swap pool address from `StateManager`.
+   - Frontend estimates price via AMM quote; user confirms swap transaction.
+   - Swap contract executes trade, emits `SwapExecuted`, updates pool balances; Portfolio Manager updates reserves if needed.
 
-## 18. Integration Notes
-[See detailed Integration Notes](docs/public/integration_notes.md) (Covers guidelines and considerations for integrating with external systems.)
+2. **Backing asset update**
+   - Steward submits `registerAsset` via Portfolio Manager; transaction routed through timelock/multi-sig.
+   - After delay, asset recorded; event triggers dashboard refresh.
 
-## 19. Appendix / Examples
-[See detailed Appendix](docs/public/appendix_examples.md) (Provides supplementary information, examples, and reference material.)
+3. **Governance action**
+   - Proposal created in DAO module referencing desired change (e.g., new swap fee).
+   - Once approved, timelock queues the transaction; alerts notify community.
+   - After timelock expiry, executor calls the queued action; StateManager/QER contracts receive updates.
+
+4. **Portal deployment**
+   - CI builds static site, pins to IPFS (Pinata + Web3.Storage) and optionally Arweave.
+   - ENS content hash updated via multi-sig; monitoring verifies propagation.
+
+## 7. Data & State Management
+- **On-chain:** All critical state lives in the contracts (token balances, reserves, configs, proposals). Immutable logs provide audit trail.
+- **Off-chain caches:** Indexers maintain derived views (e.g., USD valuations, historical swaps). They must be reproducible from on-chain data.
+- **Secrets & keys:** Multi-sig hardware wallets for stewards; no custodial secrets stored server-side.
+
+## 8. Deployment Topology
+- **Networks:**
+  - Local development: Anvil/Hardhat node with deterministic seed data.
+  - Testnet: Sepolia or Holesky for staging; contracts deployed via CI and documented.
+  - Mainnet: Production release after audits and governance sign-off.
+- **Hosting:**
+  - IPFS pinning with two providers + optional static mirror (e.g., Vercel/Cloudflare) as read-only backup.
+  - ENS records managed through timelock-controlled multi-sig.
+- **Configuration:** `StateManager` seed script populates addresses post-deployment; portal reads from a JSON manifest generated by CI.
+
+## 9. Security & Privacy
+- Formal threat model covers contract exploitation (re-entrancy, oracle manipulation), governance capture, and front-end spoofing.
+- Critical contracts reviewed internally + external auditors before mainnet release.
+- Bug bounty launched alongside MVP to incentivise responsible disclosure.
+- No PII storage; alerts rely on wallet-address subscriptions or opt-in email hashed/managed off-chain.
+- Timelocks, multi-sig approvals, and withdraw alerts offer layered defence against treasury drain.
+
+## 10. Observability & Operations
+- Contract events streamed into monitoring dashboards (e.g., Dune queries, custom Grafana).
+- Automated watches on timelock queues, reserve balances, and swap slippage trigger PagerDuty/Discord alerts.
+- IPFS pin monitor verifies availability; ENS resolver checks run daily.
+- Incident runbook defines steps for pausing contracts, informing the community, and rolling back deployments.
+
+## 11. Scalability & Performance
+- Contracts optimised for expected low-to-mid throughput; swap operations rely on established AMM patterns.
+- Event-driven architecture allows adding more listeners/indexers without contract changes.
+- Portal fetches aggregate data via cacheable endpoints to reduce RPC load.
+- Future roadmap: horizontal scale indexers, layer-2 deployment exploration, off-chain computation hooks.
+
+## 12. Testing & Quality Assurance
+- Foundry/Hardhat unit tests for each contract covering success and failure paths.
+- Integration tests exercising cross-contract flows (minting, swapping, governance updates).
+- Simulation of adverse scenarios (oracle deviation, queue flooding) before deploying changes.
+- Frontend end-to-end tests (Playwright) verifying critical user journeys (connect wallet, swap, read dashboard).
+- CI enforces linting, style, and minimum coverage thresholds.
+
+## 13. Risks, Assumptions, Decisions
+- **Fixed supply assumption:** No minting beyond cap; if economic conditions change, DAO must amend constitution + contracts.
+- **Single-asset swap MVP:** Reduces complexity but limits liquidity options; plan for multi-asset support in Phase 2.
+- **Oracle dependency:** Initial version may rely on trusted price feed (Chainlink or steward-signed). Document failover procedures.
+- **Bootstrap governance:** Temporary guardian keys exist; clear timeline to transition to on-chain voting documented in constitution.
+- **IPFS availability:** Requires redundant pinning and regular verification to avoid site disappearance.
+
+## 14. Roadmap Alignment & Next Steps
+- Finalise detailed specs for each contract (issues #16–#19) and align code scaffolding with this architecture.
+- Produce sequence diagrams for key flows (swap, governance queue, reserve update) and attach to repo once ready.
+- Stand up testnet deployments with telemetry to validate observability design.
+- Expand documentation into component-specific READMEs as implementation begins.

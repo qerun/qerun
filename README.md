@@ -19,5 +19,9 @@ QERUN aims to become:
 3. **DAO Governance** – Minting, cap, and allocation controlled by community vote.  
 4. **Expansion** – Integrations, advanced financial tools, new assets.  
 
-note:
-soon the dev branch will be setup and everything will go through PR.
+## 🛠️ Development Workflow
+- `main` stays release-ready; CI/CD and deployments should target this branch only.  
+- Day-to-day work happens on `dev`. Create feature branches from `dev` and open PRs back into `dev` for review.  
+- Promote changes to `main` through a reviewed PR from `dev → main` once the release cut is stable.  
+- Avoid direct pushes to either `main` or `dev`; use pull requests so reviews and automated checks gate every change.  
+- Keep your local repo in sync with `origin/dev` before starting new work: `git checkout dev && git pull origin dev`.  

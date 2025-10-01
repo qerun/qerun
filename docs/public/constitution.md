@@ -39,8 +39,13 @@ We, the members of Qerun, establish this Constitution to foster a decentralized 
 
 ### Pioneers
 
-- Pioneers are founding or early members recognized for their contributions to Qerun’s establishment and growth.  
-- **TODO: Define perks and special recognitions for Pioneers.**
+- Pioneers are founding or early members recognized for their contributions to Qerun's establishment and growth.  
+- Pioneer perks and recognitions include:  
+  - Guaranteed allowlist access to new vaults, products, and pilot programs before wider release.  
+  - A 1.25x governance voting multiplier during the first year of DAO operations (subject to renewal vote thereafter).  
+  - A commemorative Pioneer NFT that unlocks exclusive community channels, events, and reputation badges.  
+  - Eligibility for rotating advisory seats that help shape quarterly priorities and stewardship guidelines.  
+- Perks are reviewed annually by the DAO to ensure they stay aligned with community values and avoid entrenched privilege.
 
 ---
 
