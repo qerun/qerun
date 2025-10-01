@@ -1,7 +1,7 @@
 # Qerun Architecture Overview
 
 ## 1. Executive Summary
-Qerun is a portfolio-backed, DAO-governed crypto ecosystem designed to give members a transparent, low-friction way to hold and grow value. The MVP focuses on four core capabilities: minting and tracking the fixed-supply QER token, managing backing assets, enabling controlled swaps, and coordinating governance actions through a community-owned portal.
+Qerun is a DAO-governed crypto ecosystem designed to give members a transparent, low-friction way to hold and grow value. The MVP focuses on four core capabilities: minting and tracking the fixed-supply QER token, managing treasury assets, enabling controlled swaps, and coordinating governance actions through a community-owned portal.
 
 Key objectives for the MVP architecture:
 - Preserve capital safety through conservative smart-contract design and multi-party controls.

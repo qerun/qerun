@@ -52,7 +52,7 @@ We, the members of Qerun, establish this Constitution to foster a decentralized 
 ## Section 3: Governance Structure
 
 - The Qerun DAO Treasury is managed collectively by members, ensuring transparent handling of community funds.
-- Members vote on portfolio allocation, directing resources to projects and initiatives aligned with Qerun’s mission.
+- Members vote on treasury allocation, directing resources to projects and initiatives aligned with Qerun’s mission.
 - Proposals can be submitted by any member and are subject to community discussion and voting before implementation.
 - Optional councils or committees may be established to oversee specialized areas or provide advisory support.
 
