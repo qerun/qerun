@@ -69,9 +69,9 @@ We, the members of Qerun, establish this Constitution to foster a decentralized 
 
 ## Section 5: Community Contributions
 
-- Members contribute through development, governance participation, advocacy, community building, and other activities.
-- Contributions are recognized and rewarded in alignment with their impact on the community.  
-- **TODO: Establish detailed reward mechanisms for contributions.**
+- Members contribute through development (smart contracts, frontend, audits), operations (infrastructure, security, treasury management), governance participation (proposal drafting, moderation), community growth (education, support, partnerships), and creative work (content, design, product research).
+- Contribution recognition and rewards draw from the DAO rewards vault and other approved budgets; exact allocations and payout mechanics are decided by community vote and revisited during periodic treasury reviews.
+- Contributors are encouraged to document deliverables and measurable impact so rewards remain transparent and auditable.
 
 ---
 
