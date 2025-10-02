@@ -79,7 +79,9 @@ We, the members of Qerun, establish this Constitution to foster a decentralized 
 
 - Allocation of resources is fully governed by the community, ensuring alignment with collective priorities.
 - Governance controls budget distribution, project funding, and operational expenses.  
-- **TODO: Define specific allocation ratios and guidelines.**
+- Each treasury cycle (recommended quarterly), the DAO considers an allocation proposal that outlines funding for core development, operations/security, community programs, and a contingency reserve. For example, an initial framework may earmark 40% for core development (contracts, audits, engineering), 25% for operations and security (infrastructure, legal, risk mitigation), 25% for community initiatives (education, grants, ecosystem growth), and 10% for an emergency reserve. Actual ratios are decided by governance vote and may shift as priorities evolve.
+- Allocation proposals must publish expected deliverables, responsible stewards, and review checkpoints. Funds are streamed or released in milestones where feasible to maintain accountability.
+- Emergency expenditures outside the approved allocation require a supermajority vote or designated guardian approval, followed by retrospective disclosure to the DAO.
 
 ---
 
@@ -96,6 +98,7 @@ We, the members of Qerun, establish this Constitution to foster a decentralized 
 - This Constitution may be amended through a transparent proposal and voting process.
 - Amendments require a defined quorum and majority to ensure broad consensus.
 - The document shall evolve to reflect the community’s growth and changing needs.
+- A formal constitutional review and update cycle is scheduled at least once per year (or sooner if triggered by governance), during which the DAO evaluates existing clauses, collects improvement proposals, and ratifies necessary adjustments.
 
 ---
 
@@ -118,3 +121,15 @@ We, the members of Qerun, establish this Constitution to foster a decentralized 
 - This Constitution is designed to be resilient and adaptive, guiding Qerun’s operations and governance.  
 - It serves as a foundational framework to support the community’s collective success and long-term sustainability.  
 - The community commits to uphold these principles in pursuit of shared goals.  
+
+---
+
+## Appendix A: Roles & Permissions Glossary
+
+- **Owner (State Manager)** – Initial steward responsible for onboarding governance structures; role expected to transition to DAO-controlled timelock/multisig.
+- **Module Admin Roles** – Bytes32 identifiers (e.g., `ROLE_SWAP_ADMIN`, `ROLE_TREASURY_ADMIN`) managed via the State Manager contract; grant module-specific write permissions and can be delegated through governance proposals.
+- **ID Writers** – Addresses explicitly allowlisted in State Manager to manage a specific configuration entry (e.g., updating a contract address or parameter).
+- **DAO Treasury Stewards** – Accounts or committees authorized by governance to execute treasury transactions within approved budgets.
+- **Guardians** – Emergency responders empowered to pause contracts or authorize urgent reallocations under strict guardrails, with mandatory post-event disclosure.
+
+Roles are maintained on-chain via the State Manager registry; any changes (grant/revoke) must be recorded through governance-tracked transactions so off-chain documentation and code remain consistent.
