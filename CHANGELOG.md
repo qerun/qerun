@@ -47,6 +47,9 @@ All notable updates across the Qerun stack. Timestamps are in UTC.
 ## 2025-10-02 03:15
 - Document resource allocation playbook (`12e57f1`).
 
+## 2025-10-02 15:27
+- Create the initial qerun.com website shell and publish the first live build (`3f0bc9d`).
+
 ## 2025-10-03 10:42
 - Update qerun.com homepage “What you can do” section with community contribution guidance (`ab7ffbd`).
 
