@@ -47,6 +47,9 @@ All notable updates across the Qerun stack. Timestamps are in UTC.
 ## 2025-10-02 03:15
 - Document resource allocation playbook (`12e57f1`).
 
+## 2025-10-03 10:42
+- Update qerun.com homepage “What you can do” section with community contribution guidance (`ab7ffbd`).
+
 ## 2025-10-03 19:50
 - Document per-pair fee override workflow and compiled deploy helper usage in `qerun-contracts/README.md` (commit `772f84b`).
 - Run and verify Hardhat smoke test for the deploy stack, including per-pair fee overrides (`scripts/smoke.ts`).
