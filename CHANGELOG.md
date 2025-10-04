@@ -57,3 +57,9 @@ All notable updates across the Qerun stack. Timestamps are in UTC.
 - Document per-pair fee override workflow and compiled deploy helper usage in `qerun-contracts/README.md` (commit `772f84b`).
 - Run and verify Hardhat smoke test for the deploy stack, including per-pair fee overrides (`scripts/smoke.ts`).
 - Create GitHub issues #1 and #2 in `qerun/qerun-contracts` to track admin tooling and dynamic fee design work (assigned to `qerun-dev`).
+
+## 2025-10-04 21:15
+- Wallet analyzer: add raw token amounts to holdings, display token fallback when USD is missing in history, and backfill amounts by parsing raw values (`c61c9ac`).
+- Wallet analyzer: resolve ENS/hex normalization with cached API keys and surface per-address caching in the API layer (`f2869ee`, `09fcdc2`).
+- Wallet analyzer: load analyzed wallet path into the URL for direct deep links (`f2869ee`).
+- Wallet analyzer: parse Moralis transaction `value` to populate missing amounts in recent activity (`a97a647`).
