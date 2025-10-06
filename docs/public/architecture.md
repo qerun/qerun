@@ -68,6 +68,7 @@ The ecosystem is composed of three layers.
 - Pricing logic can start with a simple constant-product pool seeded by treasury liquidity.
 - Integrates with protocol fee policy; fees routed to treasury or staking module once live.
 - Includes pause switch for emergency halts and slippage-checked swap functions to protect users.
+- Provides an `externalChecksEnabled` flag (off by default) so the swap can call an external compliance/tier service before settling trades; flipping the flag is a governance action.
 
 ### 4.4 Portfolio Manager
 - Tracks deposits/withdrawals of backing assets; each asset entry stores type, amount, valuation metadata, and custodian.
