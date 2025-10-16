@@ -15,6 +15,16 @@ It is not a prototype or demo. Instead, it is a **usable foundation** that provi
 ---
 
 ## 3. Features Included in the MVP  
+Implementation status (as of current dev branch):
+- On-chain:
+  - QER token: fixed supply ERC-20 with pause controls and governance hooks (implemented).
+  - StateManager: registry + governance module router with optional STATICCALL enforcement (implemented).
+  - Swap: constant-product AMM for QER vs whitelisted quote tokens; per-pair fee overrides; governance hooks (implemented).
+  - Treasury: custody with governance-gated withdrawals (implemented).
+  - Governance module (PriceImpactModule): directional price impact guard for swaps; compatible with STATICCALL (implemented).
+- Off-chain:
+  - Dashboard and site: basic versions present in sibling projects; governance activation and timelock are planned.
+
 - **Withdrawal Alerts**  
   - Get notified before any withdrawal request is executed, giving you time to react and secure assets.  
 - **Multi-Signature Vault (Initial Version)**  

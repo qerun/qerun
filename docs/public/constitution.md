@@ -132,4 +132,4 @@ We, the members of Qerun, establish this Constitution to foster a decentralized 
 - **DAO Treasury Stewards** – Accounts or committees authorized by governance to execute treasury transactions within approved budgets.
 - **Guardians** – Emergency responders empowered to pause contracts or authorize urgent reallocations under strict guardrails, with mandatory post-event disclosure.
 
-Roles are maintained on-chain via the State Manager registry; any changes (grant/revoke) must be recorded through governance-tracked transactions so off-chain documentation and code remain consistent.
+Roles are maintained on-chain via the State Manager registry; any changes (grant/revoke) must be recorded through governance-tracked transactions so off-chain documentation and code remain consistent. Governance module assignment and static-mode configuration emit events (`GovernanceModuleUpdated`, `GovernanceModuleOperationUpdated`, `GovernanceStaticUpdated`, `GovernanceStaticOperationUpdated`) to facilitate transparency and indexing.

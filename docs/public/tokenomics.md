@@ -11,8 +11,8 @@ Qerun follows a **safety-first tokenomics design**: prioritizing trust, capital 
 ---
 
 ## 2. Token Supply
-- **Total Supply**: Fixed at 111,111,111 QER at launch; no changes allowed.
-- **Minting/Burning**: No minting or burning allowed; null-address transfers are protected against.
+- **Total Supply**: Fixed at 111,111,111 QER at launch; minted to the Treasury at deployment.
+- **Minting/Burning**: No minting or burning functions exist in the token contract; null-address transfers are blocked.
 - **Distribution (initial outline)**:
   - Community & Ecosystem: majority allocation.
   - Team & Contributors: vesting-based, long-term locked.
@@ -31,16 +31,10 @@ Qerun follows a **safety-first tokenomics design**: prioritizing trust, capital 
 
 ---
 
-## 4. Borrowing & ETH Reserve Mechanism
-- QER holders can borrow up to **50% of their QER’s USD value** or as decided by DAO.
-- When borrowing:
-  - **50% of borrowed value** → available to user as stablecoins.
-  - **50% of borrowed value** → automatically used by protocol to buy ETH and add to reserves or as decided by DAO.
-- This design:
-  - Reduces active QER supply (as collateral is locked).
-  - Accumulates ETH reserves to strengthen the protocol.
-  - Provides users with liquidity while reinforcing ecosystem growth.
-  - Null-address protection ensures tokens cannot be lost or burned unintentionally during these operations.
+## 4. Borrowing & ETH Reserve Mechanism (Future)
+- Borrowing against QER is a future feature subject to governance design and audits.
+- Any borrowing model will be implemented in separate modules/contracts (not in the QER token), governed via `StateManager`-wired policies.
+- The DAO will set LTV, reserve routing, and liquidation parameters through governance modules and timelock.
 
 ---
 
@@ -54,8 +48,8 @@ Qerun follows a **safety-first tokenomics design**: prioritizing trust, capital 
 
 ## 6. Governance & Safeguards
 - Community DAO will progressively control major decisions.
-- Certain sensitive parameters require collateralized or staged proposals.
-- Governance can vote on borrowing ratios, reserve management, and incentive structures.
+- Sensitive parameters and module pointers are updated via `StateManager`, with optional STATICCALL on policy modules to ensure they remain read-only.
+- Governance can vote on borrowing ratios, reserve management, and incentive structures in future phases.
 
 ---
 

@@ -1,7 +1,7 @@
 # Qerun Architecture Overview
 
 ## 1. Executive Summary
-Qerun is a DAO-governed crypto ecosystem designed to give members a transparent, low-friction way to hold and grow value. The MVP focuses on four core capabilities: minting and tracking the fixed-supply QER token, managing treasury assets, enabling controlled swaps, and coordinating governance actions through a community-owned portal.
+Qerun is a DAO-governed crypto ecosystem designed to give members a transparent, low-friction way to hold and grow value. The MVP focuses on four core capabilities: issuing and tracking the fixed-supply QER token, managing treasury assets, enabling controlled swaps, and wiring a modular governance layer that can evolve toward a DAO.
 
 Key objectives for the MVP architecture:
 - Preserve capital safety through conservative smart-contract design and multi-party controls.
@@ -34,11 +34,11 @@ Key objectives for the MVP architecture:
 The ecosystem is composed of three layers.
 
 1. **Smart-contract layer (on-chain)**
-   - `Qerun.sol` (ERC-20 token, supply control, security guards).
-   - `StateManager.sol` (global configuration registry).
-   - `Swap/DEX` contract (AMM or bonding-curve module for QER ↔ base asset).
-   - `PortfolioManager.sol` (backing assets ledger, reserve accounting).
-   - `GovernanceTimelock` + optional `MultiSig` for vaults and main wallets (execution gating, emergency powers).
+   - `Token.sol` (QER ERC‑20 token, fixed supply, pause controls, governance hooks).
+   - `StateManager.sol` (global configuration registry and governance module router, with optional STATICCALL enforcement).
+   - `Swap.sol` (AMM for QER ↔ whitelisted quote tokens; per-pair fee overrides; governance hooks on critical ops).
+   - `Treasury.sol` (custody for protocol assets with governance-gated withdrawals).
+   - Future: `GovernanceTimelock` / `Governor` and optional `MultiSig` for execution gating and progressive decentralization.
 
 2. **Interface & integration layer (off-chain)**
    - Qerun Portal (Next.js static site served via IPFS/ENS) for token info, swap UI, governance updates.
@@ -52,34 +52,32 @@ The ecosystem is composed of three layers.
 
 ## 4. Smart Contract Architecture
 ### 4.1 StateManager.sol
-- Namespaced key/value store (`module.key`) for addresses, protocol parameters, feature flags.
-- Only governance or designated stewards can mutate entries; reads are permissionless.
-- Emits detailed events on every write (`ConfigUpdated(module, key, oldValue, newValue, actor)`).
-- Provides helper views for frequently accessed settings (e.g., `getSwapPool()`, `getTreasury()`).
+- Namespaced key/value store for addresses, protocol parameters, and feature flags.
+- Role- and id-writer–based permissions for mutations; reads are permissionless.
+- Emits detailed events on every write and clear (see `ConfigUpdated` and `ConfigCleared`).
+- Governance module router:
+   - Assign a module per target or per (target, operation).
+   - Optional STATICCALL enforcement per target/op (`setGovernanceStatic`, `setGovernanceStaticForOperation`) to guarantee read-only module behavior and lower gas; emits `GovernanceStatic*` events.
+   - Bubbles revert reasons from modules; if no module set, returns empty bytes.
 
-### 4.2 Qerun.sol (QER token)
-- ERC-20 implementation with fixed 111,111,111 supply ceiling; mint/burn functions require governance authorization.
-- Null-address transfers blocked at the contract level; emits explicit errors for misuse.
-- Hooks to lock collateral when users enter borrowing products (future phases), ensuring compatibility with the reserve mechanism.
-- Maintains metadata for UI (symbol, decimals, version) and exposes governance modifier to restrict sensitive functions.
+### 4.2 Token.sol (QER token)
+- ERC‑20 with fixed total supply of 111,111,111 QER minted to the Treasury at deploy time.
+- No mint or burn functions exist by design; pause controls and AccessControl-based roles are present.
+- Governance hooks execute before critical actions (pause/unpause/transfer) by calling `StateManager.applyGovernanceModule` with a versioned (v1) context.
+- Future phases may introduce voting extensions (e.g., ERC20Votes) via token upgrade or wrapper—out of scope for MVP.
 
 ### 4.3 Swap / DEX Module
-- MVP supports one base asset (configured in `StateManager`).
-- Pricing logic can start with a simple constant-product pool seeded by treasury liquidity.
-- Integrates with protocol fee policy; fees routed to treasury or staking module once live.
-- Includes pause switch for emergency halts and slippage-checked swap functions to protect users.
-- Provides an `externalChecksEnabled` flag (off by default) so the swap can call an external compliance/tier service before settling trades; flipping the flag is a governance action.
+- Supports one or more whitelisted quote assets (configured in `StateManager`); QER is the base asset.
+- Constant-product AMM seeded by treasury or providers; per-pair fee override supported; pause and slippage checks included.
+- Governance hooks on operations like `SWAP`, `ADD_LIQUIDITY`, `REMOVE_LIQUIDITY`, `UPDATE_SWAP_PAIRS`, and `PAUSE/UNPAUSE` call into `StateManager` with v1 contexts.
+- Policy example: `PriceImpactModule` enforces maximum price impact for QER → Quote direction; recommended to run under STATICCALL.
 
-### 4.4 Portfolio Manager
-- Tracks deposits/withdrawals of backing assets; each asset entry stores type, amount, valuation metadata, and custodian.
-- Publishes aggregate metrics (total reserve value, asset mix) for dashboards via events.
-- Enforces role-based access: only authorised stewards/DAO can register or move assets.
-- Designed for extension: future modules can plug in valuation oracles or automated rebalancing.
+### 4.4 Portfolio Manager (Future)
+- Planned component for reserve accounting and asset mix reporting. Not part of the current contracts; reserves are managed via `Treasury` in MVP.
 
 ### 4.5 Governance & Control Layer
-- Timelock contract queues sensitive transactions (minting, config updates) and enforces delay before execution.
-- Multi-signature safe holds ultimate admin role during bootstrap; DAO voting contract replaces it as trust matures.
-- Emergency pause/guardian keys exist for MVP but are transparently published in `StateManager` for accountability.
+- Progressive decentralization path: start with steward roles; later introduce Timelock + Governor for on-chain voting and execution.
+- Emergency pause/guardian roles are explicit in contracts (AccessControl); addresses can be published in `StateManager`.
 
 ## 5. Off-Chain Interfaces & Services
 ### 5.1 Qerun Portal (Web)
